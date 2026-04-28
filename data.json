@@ -1,0 +1,438 @@
+{
+  "state": "success",
+  "last_run": "29-Apr-2026 02:12 AM",
+  "next_run": "03:12 AM",
+  "login_dur": 8,
+  "elapsed_min": 9.3,
+  "error": null,
+  "today_range": "01:12 AM \u2013 02:12 AM",
+  "lw_range": "22-Apr 01:12 AM \u2013 02:12 AM",
+  "today_count": 3966,
+  "lw_count": 5235,
+  "metrics": {
+    "sms_count": 4108,
+    "wfm_count": 3,
+    "email_count": 13,
+    "ad_success_count": 135
+  },
+  "uoc": [
+    {
+      "name": "UOC1",
+      "url": "http://10.19.33.83:3000/workspaces/HOME_WS",
+      "seconds": 7.9,
+      "status": "\u2705",
+      "error": null
+    },
+    {
+      "name": "UOC2",
+      "url": "http://10.19.33.176:3000/workspaces/home_ws",
+      "seconds": 5.7,
+      "status": "\u2705",
+      "error": null
+    },
+    {
+      "name": "UOC3",
+      "url": "http://10.19.33.27:3000/workspaces/home_ws_tx_ent",
+      "seconds": 6.6,
+      "status": "\u2705",
+      "error": null
+    },
+    {
+      "name": "UOC4",
+      "url": "http://10.19.33.84:3000/workspaces/home_ws",
+      "seconds": 2.8,
+      "status": "\u2705",
+      "error": null
+    }
+  ],
+  "categories": [
+    {
+      "name": "AccessMicrowaveNetwork",
+      "today": 566,
+      "lw": 769
+    },
+    {
+      "name": "AccessOpticalNetwork",
+      "today": 354,
+      "lw": 396
+    },
+    {
+      "name": "AggregationNetwork",
+      "today": 33,
+      "lw": 52
+    },
+    {
+      "name": "BSS",
+      "today": 1800,
+      "lw": 2810
+    },
+    {
+      "name": "BackboneNetwork",
+      "today": 56,
+      "lw": 44
+    },
+    {
+      "name": "CEN",
+      "today": 387,
+      "lw": 304
+    },
+    {
+      "name": "CORE",
+      "today": 38,
+      "lw": 64
+    },
+    {
+      "name": "Cloud",
+      "today": 100,
+      "lw": 34
+    },
+    {
+      "name": "DCN",
+      "today": 0,
+      "lw": 3
+    },
+    {
+      "name": "Dark Fiber",
+      "today": 1,
+      "lw": 1
+    },
+    {
+      "name": "ENT_OSS",
+      "today": 12,
+      "lw": 14
+    },
+    {
+      "name": "HPE_INFRA_DATABASE",
+      "today": 1,
+      "lw": 1
+    },
+    {
+      "name": "HPE_INFRA_UNIX",
+      "today": 0,
+      "lw": 2
+    },
+    {
+      "name": "IN",
+      "today": 16,
+      "lw": 49
+    },
+    {
+      "name": "INTERNET",
+      "today": 3,
+      "lw": 2
+    },
+    {
+      "name": "IT",
+      "today": 24,
+      "lw": 30
+    },
+    {
+      "name": "LD",
+      "today": 2,
+      "lw": 2
+    },
+    {
+      "name": "LD-SLM",
+      "today": 2,
+      "lw": 1
+    },
+    {
+      "name": "MPLS",
+      "today": 7,
+      "lw": 1
+    },
+    {
+      "name": "NSS",
+      "today": 80,
+      "lw": 81
+    },
+    {
+      "name": "OSS",
+      "today": 14,
+      "lw": 7
+    },
+    {
+      "name": "PKC",
+      "today": 37,
+      "lw": 96
+    },
+    {
+      "name": "PMS",
+      "today": 227,
+      "lw": 220
+    },
+    {
+      "name": "SDWAN_CPE",
+      "today": 0,
+      "lw": 1
+    },
+    {
+      "name": "SQM",
+      "today": 118,
+      "lw": 158
+    },
+    {
+      "name": "STP",
+      "today": 15,
+      "lw": 16
+    },
+    {
+      "name": "VAS",
+      "today": 22,
+      "lw": 31
+    },
+    {
+      "name": "VOLTE",
+      "today": 51,
+      "lw": 46
+    },
+    {
+      "name": "TOTAL",
+      "today": 3966,
+      "lw": 5235
+    }
+  ],
+  "history": [
+    {
+      "time": "29-Apr-26 02:12 AM",
+      "state": "success",
+      "elapsed": 9.3,
+      "error": null
+    },
+    {
+      "time": "29-Apr-26 02:12 AM",
+      "state": "running",
+      "elapsed": null,
+      "error": null
+    }
+  ],
+  "bss_locations": [
+    {
+      "name": "APR",
+      "today": 115,
+      "lw": 83
+    },
+    {
+      "name": "ASM",
+      "today": 51,
+      "lw": 79
+    },
+    {
+      "name": "BIH",
+      "today": 63,
+      "lw": 93
+    },
+    {
+      "name": "CHN",
+      "today": 4,
+      "lw": 22
+    },
+    {
+      "name": "DEL",
+      "today": 122,
+      "lw": 55
+    },
+    {
+      "name": "GUJ",
+      "today": 92,
+      "lw": 280
+    },
+    {
+      "name": "HAR",
+      "today": 55,
+      "lw": 34
+    },
+    {
+      "name": "HPR",
+      "today": 3,
+      "lw": 4
+    },
+    {
+      "name": "JNK",
+      "today": 2,
+      "lw": 8
+    },
+    {
+      "name": "KAR",
+      "today": 69,
+      "lw": 100
+    },
+    {
+      "name": "KEL",
+      "today": 49,
+      "lw": 37
+    },
+    {
+      "name": "KOL",
+      "today": 21,
+      "lw": 28
+    },
+    {
+      "name": "MAG",
+      "today": 97,
+      "lw": 159
+    },
+    {
+      "name": "MPCG",
+      "today": 144,
+      "lw": 180
+    },
+    {
+      "name": "MUM",
+      "today": 216,
+      "lw": 120
+    },
+    {
+      "name": "NES",
+      "today": 35,
+      "lw": 62
+    },
+    {
+      "name": "ODI",
+      "today": 66,
+      "lw": 19
+    },
+    {
+      "name": "PNB",
+      "today": 61,
+      "lw": 212
+    },
+    {
+      "name": "RAJ",
+      "today": 146,
+      "lw": 108
+    },
+    {
+      "name": "ROB",
+      "today": 142,
+      "lw": 125
+    },
+    {
+      "name": "ROTN",
+      "today": 39,
+      "lw": 227
+    },
+    {
+      "name": "UPE",
+      "today": 145,
+      "lw": 718
+    },
+    {
+      "name": "UPW",
+      "today": 63,
+      "lw": 57
+    },
+    {
+      "name": "TOTAL",
+      "today": 1800,
+      "lw": 2810
+    }
+  ],
+  "cen_locations": [
+    {
+      "name": "APR",
+      "today": 30,
+      "lw": 13
+    },
+    {
+      "name": "ASM",
+      "today": 0,
+      "lw": 3
+    },
+    {
+      "name": "BIH",
+      "today": 5,
+      "lw": 7
+    },
+    {
+      "name": "CHN",
+      "today": 4,
+      "lw": 2
+    },
+    {
+      "name": "DEL",
+      "today": 102,
+      "lw": 27
+    },
+    {
+      "name": "GUJ",
+      "today": 20,
+      "lw": 37
+    },
+    {
+      "name": "HAR",
+      "today": 5,
+      "lw": 6
+    },
+    {
+      "name": "KAR",
+      "today": 24,
+      "lw": 0
+    },
+    {
+      "name": "KEL",
+      "today": 4,
+      "lw": 15
+    },
+    {
+      "name": "KOL",
+      "today": 2,
+      "lw": 3
+    },
+    {
+      "name": "MAG",
+      "today": 81,
+      "lw": 20
+    },
+    {
+      "name": "MPCG",
+      "today": 20,
+      "lw": 6
+    },
+    {
+      "name": "MUM",
+      "today": 15,
+      "lw": 24
+    },
+    {
+      "name": "NES",
+      "today": 0,
+      "lw": 1
+    },
+    {
+      "name": "PNB",
+      "today": 27,
+      "lw": 8
+    },
+    {
+      "name": "RAJ",
+      "today": 9,
+      "lw": 29
+    },
+    {
+      "name": "ROB",
+      "today": 3,
+      "lw": 19
+    },
+    {
+      "name": "ROTN",
+      "today": 6,
+      "lw": 8
+    },
+    {
+      "name": "UPE",
+      "today": 22,
+      "lw": 41
+    },
+    {
+      "name": "UPW",
+      "today": 8,
+      "lw": 35
+    },
+    {
+      "name": "TOTAL",
+      "today": 387,
+      "lw": 304
+    }
+  ]
+}

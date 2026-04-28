@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HC Report Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   CSS VARIABLES
+══════════════════════════════════════════ */
+:root {
+  --bg:        #0c1220;
+  --bg2:       #101929;
+  --surface:   #131f30;
+  --surface2:  #192840;
+  --surface3:  #1f3150;
+  --border:    #1e3352;
+  --border2:   #2a4468;
+  --accent:    #1d6fd8;
+  --accent2:   #1456b0;
+  --accent3:   #0d3d80;
+  --text:      #cdd9ee;
+  --text2:     #8aa4c8;
+  --muted:     #4e6a8a;
+  --ok:        #2ecc71;
+  --ok-bg:     #0d2d1e;
+  --warn:      #f0a500;
+  --warn-bg:   #2a1e00;
+  --err:       #e74c3c;
+  --err-bg:    #2d0d0d;
+  --up:        #2ecc71;
+  --down:      #e74c3c;
+  --mono:      'IBM Plex Mono', monospace;
+  --sans:      'IBM Plex Sans', sans-serif;
+  --radius:    8px;
+  --shadow:    0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* ══════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 13px;
+  line-height: 1.5;
+}
+button { font-family: var(--sans); cursor: pointer; }
+select { font-family: var(--sans); }
+
+/* ══════════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════════ */
+#topbar {
+  background: linear-gradient(90deg, #0a1522 0%, #0f1f36 100%);
+  border-bottom: 2px solid var(--accent2);
+  height: 52px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.6);
+  gap: 12px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.brand-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+.brand-badge {
+  background: var(--accent2);
+  color: #90c4ff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+
+.topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 12px;
+  color: var(--text2);
+  flex-wrap: wrap;
+}
+.topbar-center strong { color: var(--text); font-weight: 600; }
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.s-running { background: #3d1500; color: #ffa04a; border: 1px solid #7a2800; }
+.s-success { background: #0a2d18; color: #5de89a; border: 1px solid #1a6040; }
+.s-error   { background: #2d0a08; color: #ff7b6b; border: 1px solid #6d2020; }
+.s-running .dot { width: 7px; height: 7px; border-radius: 50%; background: #ff7722; animation: blink 1s step-start infinite; }
+.s-success .dot { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; }
+.s-error   .dot { width: 7px; height: 7px; border-radius: 50%; background: #e74c3c; }
+@keyframes blink { 50% { opacity: 0.2; } }
+
+/* ══════════════════════════════════════════
+   TOOLBAR
+══════════════════════════════════════════ */
+#toolbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tb-group { display: flex; align-items: center; gap: 6px; }
+.tb-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+.tb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+
+.btn {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--accent2); border-color: var(--accent); color: #fff; }
+.btn.active { background: var(--accent2); border-color: var(--accent); color: #fff; }
+.btn-green { background: var(--ok-bg); border-color: #1a6040; color: var(--ok); }
+.btn-green:hover { background: #1a4030; color: #5de89a; }
+.btn-sm { padding: 3px 9px; font-size: 10.5px; }
+
+.copy-format-select {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  outline: none;
+}
+
+/* ══════════════════════════════════════════
+   CANVAS — grid and free mode
+══════════════════════════════════════════ */
+#canvas {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  align-items: start;
+  min-height: calc(100vh - 100px);
+  position: relative;
+}
+#canvas.mode-2col { grid-template-columns: repeat(2, 1fr); }
+#canvas.mode-1col { grid-template-columns: 1fr; }
+#canvas.mode-free {
+  display: block;
+  min-height: calc(100vh - 100px);
+}
+
+/* ══════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover { border-color: var(--border2); }
+
+/* Free-mode card */
+.card.free {
+  position: absolute;
+  resize: both;
+  overflow: auto;
+  min-width: 280px;
+  min-height: 120px;
+  cursor: default;
+}
+.card.free.dragging {
+  opacity: 0.92;
+  box-shadow: 0 16px 50px rgba(0,0,0,0.8);
+  z-index: 500;
+  border-color: var(--accent);
+}
+
+.card-header {
+  background: var(--surface2);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+  flex-shrink: 0;
+  user-select: none;
+}
+.card.free .card-header { cursor: move; }
+.card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7fb4f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-hdr-btns { display: flex; gap: 5px; flex-shrink: 0; }
+
+.card-body {
+  padding: 12px;
+  flex: 1;
+  overflow: auto;
+}
+
+/* Collapsed */
+.card.collapsed .card-body { display: none; }
+
+/* ══════════════════════════════════════════
+   STAT ROWS
+══════════════════════════════════════════ */
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: var(--text2); font-size: 12px; white-space: nowrap; }
+.stat-val {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 14px;
+  text-align: right;
+}
+.val-ok   { color: var(--ok); }
+.val-warn { color: var(--warn); }
+.val-err  { color: var(--err); }
+.val-neu  { color: var(--text); }
+
+.threshold-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+.tbar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.tbar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* ══════════════════════════════════════════
+   DATA TABLES
+══════════════════════════════════════════ */
+.tbl-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.legend {
+  display: flex;
+  gap: 12px;
+  font-size: 10.5px;
+  color: var(--muted);
+}
+.legend span { display: flex; align-items: center; gap: 4px; }
+.dot-up   { width: 6px; height: 6px; border-radius: 50%; background: var(--up); }
+.dot-down { width: 6px; height: 6px; border-radius: 50%; background: var(--down); }
+
+.tbl-wrap { overflow-x: auto; border-radius: 5px; border: 1px solid var(--border); }
+.data-tbl {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 12px;
+  min-width: 340px;
+}
+.data-tbl thead th {
+  background: var(--accent3);
+  color: #a8ccff;
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--accent2);
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.data-tbl thead th:not(:first-child) { text-align: right; }
+.data-tbl tbody tr { transition: background 0.1s; }
+.data-tbl tbody tr:nth-child(even)  { background: #0f1a28; }
+.data-tbl tbody tr:nth-child(odd)   { background: var(--surface); }
+.data-tbl tbody tr:hover            { background: #1a2e48; }
+.data-tbl tbody td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.data-tbl tbody tr:last-child td { border-bottom: none; }
+.data-tbl tbody td:first-child {
+  color: var(--text2);
+  font-weight: 500;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.data-tbl tbody td:not(:first-child) { text-align: right; }
+.data-tbl tfoot td {
+  background: #0b1a2d;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-top: 2px solid var(--accent2);
+}
+.data-tbl tfoot td:not(:first-child) { text-align: right; }
+
+/* Color cells */
+.cell-up   { color: var(--up);   font-weight: 700; }
+.cell-down { color: var(--down); font-weight: 700; }
+.cell-same { color: var(--text); font-weight: 600; }
+
+.delta-badge {
+  display: inline-block;
+  font-size: 10px;
+  margin-left: 4px;
+  font-family: var(--sans);
+  opacity: 0.85;
+}
+
+/* ══════════════════════════════════════════
+   UOC ROWS
+══════════════════════════════════════════ */
+.uoc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+}
+.uoc-row:last-child { border-bottom: none; }
+.uoc-name { color: #7fb4f0; font-weight: 600; font-family: var(--mono); font-size: 12px; }
+.uoc-val  { font-family: var(--mono); font-weight: 700; font-size: 13px; }
+
+/* ══════════════════════════════════════════
+   HISTORY
+══════════════════════════════════════════ */
+.hist-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #111e30;
+  font-size: 11px;
+  font-family: var(--mono);
+  gap: 8px;
+}
+.hist-row:last-child { border-bottom: none; }
+.hist-state {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.hs-ok  { background: var(--ok-bg); color: var(--ok); }
+.hs-err { background: var(--err-bg); color: var(--err); }
+.hs-run { background: var(--warn-bg); color: var(--warn); }
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+#toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #0e2518;
+  border: 1px solid var(--ok);
+  color: var(--ok);
+  padding: 10px 18px;
+  border-radius: 7px;
+  font-size: 12.5px;
+  font-family: var(--mono);
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+  max-width: 300px;
+}
+
+/* ══════════════════════════════════════════
+   ERROR BANNER
+══════════════════════════════════════════ */
+.err-banner {
+  background: var(--err-bg);
+  border: 1px solid #6d2020;
+  color: #ff9090;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  word-break: break-word;
+  margin-top: 8px;
+  font-family: var(--mono);
+}
+
+/* ══════════════════════════════════════════
+   MISC
+══════════════════════════════════════════ */
+.no-data { color: var(--muted); font-size: 12px; padding: 16px 0; text-align: center; font-style: italic; }
+.divider { height: 1px; background: var(--border); margin: 8px 0; }
+.tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+.tag-ok   { background: var(--ok-bg);   color: var(--ok); }
+.tag-warn { background: var(--warn-bg); color: var(--warn); }
+.tag-err  { background: var(--err-bg);  color: var(--err); }
+
+/* refresh ring */
+.spin { display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ TOP BAR ══════════════ -->
+<div id="topbar">
+  <div class="brand">
+    <div class="brand-name">🖥️ HC Report</div>
+    <div class="brand-badge">LIVE</div>
+    <div style="font-size:11px;color:var(--text2);margin-left:4px" id="hdr-last">—</div>
+  </div>
+  <div class="topbar-center">
+    <span>Next run: <strong id="hdr-next">—</strong></span>
+    <span id="hdr-elapsed" style="display:none">Elapsed: <strong id="hdr-elapsed-val">—</strong></span>
+    <span id="countdown-wrap">Refresh in: <strong id="countdown">30s</strong></span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <span id="status-pill" class="status-pill s-running"><span class="dot"></span>—</span>
+  </div>
+</div>
+
+<!-- ══════════════ TOOLBAR ══════════════ -->
+<div id="toolbar">
+  <div class="tb-group">
+    <span class="tb-label">Layout</span>
+    <button class="btn active" id="btn-3col" onclick="setLayout('grid3')">3 Col</button>
+    <button class="btn"        id="btn-2col" onclick="setLayout('grid2')">2 Col</button>
+    <button class="btn"        id="btn-1col" onclick="setLayout('grid1')">1 Col</button>
+    <button class="btn"        id="btn-free" onclick="setLayout('free')">🖱 Free Drag</button>
+  </div>
+
+  <div class="tb-sep"></div>
+
+  <div class="tb-group">
+    <span class="tb-label">Copy as</span>
+    <select class="copy-format-select" id="copy-format">
+      <option value="tsv">TSV (Excel / Teams)</option>
+      <option value="aligned">Aligned Text (Chat)</option>
+    </select>
+  </div>
+
+  <div class="tb-sep"></div>
+
+  <div class="tb-group">
+    <button class="btn btn-green" onclick="copySummary()">📋 Copy Summary</button>
+    <button class="btn" onclick="doRefresh()" id="btn-refresh">🔄 Refresh</button>
+    <button class="btn" onclick="resetFreeLayout()">↺ Reset Layout</button>
+  </div>
+</div>
+
+<!-- ══════════════ CANVAS ══════════════ -->
+<div id="canvas"></div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   GLOBALS
+═══════════════════════════════════════════ */
+let layout       = localStorage.getItem('hc-layout') || 'grid3';
+let copyFormat   = localStorage.getItem('hc-copy-fmt') || 'tsv';
+let freePositions= JSON.parse(localStorage.getItem('hc-positions') || '{}');
+let lastData     = null;
+let countdownVal = 30;
+let countdownTimer;
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+document.getElementById('copy-format').value = copyFormat;
+document.getElementById('copy-format').addEventListener('change', e => {
+  copyFormat = e.target.value;
+  localStorage.setItem('hc-copy-fmt', copyFormat);
+});
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════ */
+function setLayout(mode) {
+  layout = mode;
+  localStorage.setItem('hc-layout', mode);
+  ['grid3','grid2','grid1','free'].forEach(m => {
+    document.getElementById('btn-' + m.replace('grid3','3col').replace('grid2','2col').replace('grid1','1col'))
+      ?.classList.remove('active');
+  });
+  document.getElementById('btn-' + mode.replace('grid3','3col').replace('grid2','2col').replace('grid1','1col'))
+    ?.classList.add('active');
+
+  const c = document.getElementById('canvas');
+  c.className = '';
+  document.querySelectorAll('.card').forEach(card => {
+    card.classList.remove('free','dragging');
+    card.style.cssText = '';
+  });
+
+  if (mode === 'free') {
+    c.classList.add('mode-free');
+    layFreeCards();
+  } else {
+    c.style.display = 'grid';
+    if (mode === 'grid2') c.classList.add('mode-2col');
+    if (mode === 'grid1') c.classList.add('mode-1col');
+  }
+}
+
+function resetFreeLayout() {
+  freePositions = {};
+  localStorage.setItem('hc-positions', '{}');
+  if (layout === 'free') { setLayout('free'); }
+}
+
+function layFreeCards() {
+  const cards = document.querySelectorAll('.card');
+  cards.forEach((card, i) => {
+    card.classList.add('free');
+    const id = card.dataset.cardId;
+    if (freePositions[id]) {
+      card.style.left   = freePositions[id].x + 'px';
+      card.style.top    = freePositions[id].y + 'px';
+      card.style.width  = (freePositions[id].w || 360) + 'px';
+      card.style.height = (freePositions[id].h || 'auto');
+    } else {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+      card.style.left  = (16 + col * 380) + 'px';
+      card.style.top   = (16 + row * 320) + 'px';
+      card.style.width = '360px';
+    }
+    enableDrag(card);
+  });
+}
+
+/* ═══════════════════════════════════════════
+   DRAG
+═══════════════════════════════════════════ */
+function enableDrag(card) {
+  const header = card.querySelector('.card-header');
+  if (!header || header._dragBound) return;
+  header._dragBound = true;
+
+  let ox, oy, sx, sy, dragging = false;
+  let startW, startH, resizing = false;
+
+  header.addEventListener('mousedown', e => {
+    if (e.target.closest('button, select')) return;
+    dragging = true;
+    ox = card.offsetLeft; oy = card.offsetTop;
+    sx = e.clientX;       sy = e.clientY;
+    card.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (dragging) {
+      card.style.left = Math.max(0, ox + e.clientX - sx) + 'px';
+      card.style.top  = Math.max(0, oy + e.clientY - sy) + 'px';
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (dragging) {
+      dragging = false;
+      card.classList.remove('dragging');
+      document.body.style.userSelect = '';
+      saveCardPos(card);
+    }
+  });
+}
+
+function saveCardPos(card) {
+  const id = card.dataset.cardId;
+  if (!id) return;
+  freePositions[id] = {
+    x: card.offsetLeft,
+    y: card.offsetTop,
+    w: card.offsetWidth,
+    h: card.offsetHeight
+  };
+  localStorage.setItem('hc-positions', JSON.stringify(freePositions));
+}
+
+/* ═══════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════ */
+function fmt(n) {
+  if (n === null || n === undefined || n === 'N/A' || n === '') return '—';
+  const num = Number(n);
+  if (isNaN(num)) return String(n);
+  return num.toLocaleString('en-IN');
+}
+
+function fmtRaw(n) {
+  if (n === null || n === undefined || n === 'N/A' || n === '') return '—';
+  return String(n).replace(/,/g, '');
+}
+
+function pill(state) {
+  const el = document.getElementById('status-pill');
+  const map = {
+    running: ['s-running', '⏳ Running'],
+    success: ['s-success', '✅ Ready'],
+    error:   ['s-error',   '❌ Error']
+  };
+  const [cls, txt] = map[state] || ['s-error', '—'];
+  el.className = 'status-pill ' + cls;
+  el.innerHTML = '<span class="dot"></span>' + txt;
+}
+
+function showToast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.style.background = isErr ? '#2d0a0a' : '#0e2518';
+  t.style.borderColor = isErr ? 'var(--err)' : 'var(--ok)';
+  t.style.color = isErr ? 'var(--err)' : 'var(--ok)';
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.display = 'none', 2800);
+}
+
+function valCls(val, warn, err) {
+  if (val === null || val === 'N/A' || val === undefined) return 'val-neu';
+  const n = Number(val);
+  if (isNaN(n)) return 'val-neu';
+  if (n <= warn) return 'val-ok';
+  if (n <= err)  return 'val-warn';
+  return 'val-err';
+}
+
+function threshBar(val, max, cls) {
+  const pct = Math.min(100, Math.round((Number(val) / max) * 100));
+  const color = cls === 'val-ok' ? '#2ecc71' : cls === 'val-warn' ? '#f0a500' : '#e74c3c';
+  return `<div class="threshold-bar">
+    <div class="tbar-track"><div class="tbar-fill" style="width:${pct}%;background:${color}"></div></div>
+    <span style="font-size:10px;color:var(--muted);font-family:var(--mono);width:30px;text-align:right">${pct}%</span>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   CARD BUILDER
+═══════════════════════════════════════════ */
+function makeCard(id, icon, title, bodyHtml, copyFn) {
+  const copyBtn = copyFn
+    ? `<button class="btn btn-sm" onclick="${copyFn}('${id}')">📋 Copy</button>`
+    : '';
+  const collapseBtn = `<button class="btn btn-sm" onclick="toggleCollapse('${id}')" title="Collapse">▲</button>`;
+  return `<div class="card" id="card-${id}" data-card-id="${id}">
+    <div class="card-header">
+      <span class="card-title">${icon} ${title}</span>
+      <div class="card-hdr-btns">${copyBtn}${collapseBtn}</div>
+    </div>
+    <div class="card-body" id="body-${id}">${bodyHtml}</div>
+  </div>`;
+}
+
+function toggleCollapse(id) {
+  const card = document.getElementById('card-' + id);
+  const btn  = card.querySelector('.card-hdr-btns .btn:last-child');
+  card.classList.toggle('collapsed');
+  btn.textContent = card.classList.contains('collapsed') ? '▼' : '▲';
+}
+
+/* ═══════════════════════════════════════════
+   TABLE BUILDER
+═══════════════════════════════════════════ */
+function buildTable(id, col1Name, rows, todayLbl, lwLbl) {
+  if (!rows || !rows.length)
+    return '<div class="no-data">No data available yet</div>';
+
+  const dataRows = rows.filter(r => (r[col1Name] || r.name) !== 'TOTAL');
+  const totalRow = rows.find (r => (r[col1Name] || r.name) === 'TOTAL');
+
+  let tbody = '';
+  for (const r of dataRows) {
+    const name = r[col1Name] || r.name || '';
+    const t  = Number(r.today ?? 0);
+    const lw = Number(r.lw   ?? 0);
+    const cls = t > lw ? 'cell-up' : t < lw ? 'cell-down' : 'cell-same';
+    const diff = t - lw;
+    const delta = diff !== 0
+      ? `<span class="delta-badge" style="color:${diff>0?'var(--up)':'var(--down)'}">(${diff>0?'+':''}${diff.toLocaleString('en-IN')})</span>`
+      : '';
+    tbody += `<tr>
+      <td title="${name}">${name}</td>
+      <td class="${cls}">${fmt(t)}${delta}</td>
+      <td>${fmt(lw)}</td>
+    </tr>`;
+  }
+
+  let tfoot = '';
+  if (totalRow) {
+    const t2  = Number(totalRow.today ?? 0);
+    const lw2 = Number(totalRow.lw    ?? 0);
+    const diff2 = t2 - lw2;
+    const delta2 = diff2 !== 0
+      ? `<span class="delta-badge" style="color:${diff2>0?'var(--up)':'var(--down)'}">(${diff2>0?'+':''}${diff2.toLocaleString('en-IN')})</span>`
+      : '';
+    tfoot = `<tfoot><tr><td>▶ TOTAL</td><td>${fmt(t2)}${delta2}</td><td>${fmt(lw2)}</td></tr></tfoot>`;
+  }
+
+  const shortToday = todayLbl.length > 24 ? todayLbl.slice(0, 24) + '…' : todayLbl;
+  return `<div class="tbl-toolbar">
+    <div class="legend">
+      <span><span class="dot-up"></span>Higher today</span>
+      <span><span class="dot-down"></span>Lower today</span>
+    </div>
+    <button class="btn btn-sm" onclick="copyTableById('${id}')">📋 Copy Table</button>
+  </div>
+  <div class="tbl-wrap">
+    <table class="data-tbl" id="${id}">
+      <thead><tr>
+        <th>${col1Name}</th>
+        <th>Today (${shortToday})</th>
+        <th>Last Week</th>
+      </tr></thead>
+      <tbody>${tbody}</tbody>
+      ${tfoot}
+    </table>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   COPY — clean, no zigzag
+═══════════════════════════════════════════ */
+function copyTableById(tableId) {
+  const tbl = document.getElementById(tableId);
+  if (!tbl) { showToast('Table not found', true); return; }
+
+  const fmt2 = document.getElementById('copy-format').value;
+
+  // Collect rows (header + data + footer), strip HTML/delta badges
+  const allRows = [];
+  for (const row of tbl.querySelectorAll('tr')) {
+    const cells = Array.from(row.querySelectorAll('th, td')).map(td => {
+      // Remove delta-badge spans
+      const clone = td.cloneNode(true);
+      clone.querySelectorAll('.delta-badge').forEach(el => el.remove());
+      return clone.innerText.replace(/\n/g, ' ').trim();
+    });
+    if (cells.some(c => c)) allRows.push(cells);
+  }
+
+  let text = '';
+  if (fmt2 === 'tsv') {
+    // Tab-separated — pastes perfectly into Excel and Teams
+    text = allRows.map(row => row.join('\t')).join('\r\n');
+  } else {
+    // Fixed-width aligned — clean in chat / monospace
+    const cols = allRows[0]?.length || 0;
+    const widths = Array(cols).fill(0);
+    for (const row of allRows) {
+      row.forEach((cell, i) => { widths[i] = Math.max(widths[i], cell.length + 1); });
+    }
+    const lines = allRows.map((row, ri) => {
+      return row.map((cell, i) => (i === 0 ? cell.padEnd(widths[i]) : cell.padStart(widths[i]))).join('  ');
+    });
+    // Insert separator after header row
+    const sep = widths.map(w => '─'.repeat(w)).join('──');
+    lines.splice(1, 0, sep);
+    text = lines.join('\n');
+  }
+
+  navigator.clipboard.writeText(text)
+    .then(() => showToast('✅ Table copied! Paste into Excel or chat.'))
+    .catch(() => showToast('❌ Copy failed — try manually', true));
+}
+
+function copySummary() {
+  if (!lastData) { showToast('No data loaded yet', true); return; }
+  const d = lastData, m = d.metrics || {};
+
+  const lines = [
+    '📢 SERVICE MANAGER HC REPORT',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `🗓  Date/Time  : ${d.last_run || '—'}`,
+    `⏱  Login Time : ${d.login_dur != null ? d.login_dur + ' secs' : '—'}`,
+    '',
+    `👉 Tickets (${d.today_range || 'Last 1 Hr'})  : ${fmtRaw(d.today_count)}`,
+    `👉 Tickets Same Time LW            : ${fmtRaw(d.lw_count)}`,
+    '',
+    '📊 QUEUE STATUS',
+    `   Email Queue  (< 500)    : ${fmtRaw(m.email_count)}`,
+    `   SMS Queue    (<15,000)  : ${fmtRaw(m.sms_count)}`,
+    `   SM→WFM Queue (< 300)   : ${fmtRaw(m.wfm_count)}`,
+    `   AD Success   (1hr)     : ${fmtRaw(m.ad_success_count)}`,
+  ];
+  if (d.uoc && d.uoc.length) {
+    lines.push('', `👤 UOC LOGIN  (threshold < 10s)`);
+    d.uoc.forEach(u => {
+      lines.push(`   ${(u.name + ':').padEnd(8)} ${u.error ? 'ERROR ❌' : u.seconds + 's ' + (u.status || '')}`);
+    });
+  }
+
+  navigator.clipboard.writeText(lines.join('\n'))
+    .then(() => showToast('✅ Summary copied!'))
+    .catch(() => showToast('❌ Copy failed', true));
+}
+
+/* ═══════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════ */
+function render(d) {
+  lastData = d;
+  const m = d.metrics || {};
+  const todayLbl = d.today_range || 'Today';
+  const lwLbl    = d.lw_range   || 'Last Week';
+
+  pill(d.state || 'error');
+  document.getElementById('hdr-last').textContent = 'Last: ' + (d.last_run || '—');
+  document.getElementById('hdr-next').textContent = d.next_run || '—';
+
+  /* ── Run Info ── */
+  const emCls = valCls(m.email_count, 300, 500);
+  const smCls = valCls(m.sms_count, 10000, 15000);
+  const wfCls = valCls(m.wfm_count, 200, 300);
+
+  let runHtml = `
+    <div class="stat-row"><span class="stat-label">Login Duration</span>
+      <span class="stat-val val-neu">${d.login_dur != null ? d.login_dur + 's' : '—'}</span></div>
+    <div class="stat-row"><span class="stat-label">Script Elapsed</span>
+      <span class="stat-val val-neu">${d.elapsed_min != null ? d.elapsed_min + ' min' : '—'}</span></div>
+    <div class="stat-row"><span class="stat-label">Tickets — Today</span>
+      <span class="stat-val val-neu">${fmt(d.today_count)}</span></div>
+    <div class="stat-row"><span class="stat-label">Tickets — Last Week</span>
+      <span class="stat-val val-neu">${fmt(d.lw_count)}</span></div>
+    <div class="stat-row"><span class="stat-label">Today Range</span>
+      <span style="font-size:11px;color:var(--text2);font-family:var(--mono)">${d.today_range || '—'}</span></div>
+    <div class="stat-row"><span class="stat-label">LW Range</span>
+      <span style="font-size:10px;color:var(--muted);font-family:var(--mono)">${d.lw_range || '—'}</span></div>`;
+  if (d.error) runHtml += `<div class="err-banner">❌ ${d.error}</div>`;
+
+  /* ── Queue Metrics ── */
+  let qHtml = `
+    <div class="stat-row">
+      <span class="stat-label">📧 Email Queue</span>
+      <span class="stat-val ${emCls}">${fmt(m.email_count)} <span style="font-size:10px;color:var(--muted)">/ 500</span></span>
+    </div>
+    ${m.email_count !== 'N/A' && m.email_count != null ? threshBar(m.email_count, 500, emCls) : ''}
+    <div class="divider"></div>
+    <div class="stat-row">
+      <span class="stat-label">📩 SMS Queue</span>
+      <span class="stat-val ${smCls}">${fmt(m.sms_count)} <span style="font-size:10px;color:var(--muted)">/ 15,000</span></span>
+    </div>
+    ${m.sms_count !== 'N/A' && m.sms_count != null ? threshBar(m.sms_count, 15000, smCls) : ''}
+    <div class="divider"></div>
+    <div class="stat-row">
+      <span class="stat-label">📩 SM→WFM Queue</span>
+      <span class="stat-val ${wfCls}">${fmt(m.wfm_count)} <span style="font-size:10px;color:var(--muted)">/ 300</span></span>
+    </div>
+    ${m.wfm_count !== 'N/A' && m.wfm_count != null ? threshBar(m.wfm_count, 300, wfCls) : ''}
+    <div class="divider"></div>
+    <div class="stat-row">
+      <span class="stat-label">🔐 AD Success (1hr)</span>
+      <span class="stat-val val-neu">${fmt(m.ad_success_count)}</span>
+    </div>`;
+
+  /* ── UOC ── */
+  let uocHtml = '';
+  if (d.uoc && d.uoc.length) {
+    d.uoc.forEach(u => {
+      const cls = u.error ? 'val-err' : Number(u.seconds) < 10 ? 'val-ok' : 'val-warn';
+      const tag = u.error ? '<span class="tag tag-err">ERROR</span>'
+                : Number(u.seconds) < 10 ? '<span class="tag tag-ok">OK</span>'
+                : '<span class="tag tag-warn">SLOW</span>';
+      uocHtml += `<div class="uoc-row">
+        <span class="uoc-name">${u.name}</span>
+        <span style="display:flex;align-items:center;gap:8px">
+          ${tag}
+          <span class="uoc-val ${cls}">${u.error ? '❌' : u.seconds + 's'}</span>
+        </span>
+      </div>`;
+    });
+    uocHtml += `<div style="margin-top:10px;font-size:10.5px;color:var(--muted)">⚡ Threshold: &lt; 10 seconds per node</div>`;
+  } else {
+    uocHtml = '<div class="no-data">No UOC data yet</div>';
+  }
+
+  /* ── Category Table ── */
+  const catRows = (d.categories || []).map(r => ({ CATEGORY: r.name, today: r.today, lw: r.lw }));
+  const catHtml = buildTable('tbl-cat', 'CATEGORY', catRows, todayLbl, lwLbl);
+
+  /* ── BSS Locations ── */
+  const bssRows = (d.bss_locations || []).map(r => ({ LOCATION: r.name, today: r.today, lw: r.lw }));
+  const bssHtml = buildTable('tbl-bss', 'LOCATION', bssRows, todayLbl, lwLbl);
+
+  /* ── CEN Locations ── */
+  const cenRows = (d.cen_locations || []).map(r => ({ LOCATION: r.name, today: r.today, lw: r.lw }));
+  const cenHtml = buildTable('tbl-cen', 'LOCATION', cenRows, todayLbl, lwLbl);
+
+  /* ── History ── */
+  let histHtml = '';
+  if (d.history && d.history.length) {
+    d.history.forEach(h => {
+      const cls = h.state === 'success' ? 'hs-ok' : h.state === 'error' ? 'hs-err' : 'hs-run';
+      histHtml += `<div class="hist-row">
+        <span style="color:var(--text2)">${h.time || '—'}</span>
+        <span class="hist-state ${cls}">${h.state || '—'}</span>
+        <span style="color:var(--muted)">${h.elapsed != null ? h.elapsed + ' min' : '—'}</span>
+        ${h.error ? `<span style="color:var(--err);font-size:10px" title="${h.error}">⚠</span>` : ''}
+      </div>`;
+    });
+  } else {
+    histHtml = '<div class="no-data">No run history yet</div>';
+  }
+
+  /* ── Assemble ── */
+  const canvas = document.getElementById('canvas');
+  canvas.innerHTML =
+    makeCard('run',  '⚙️',  'Run Info',                                runHtml,  null) +
+    makeCard('q',   '📊',  'Queue Metrics',                            qHtml,    null) +
+    makeCard('uoc', '👤',  'UOC Login Performance',                    uocHtml,  null) +
+    makeCard('cat', '📋',  'Category Comparison — ' + todayLbl,        catHtml,  null) +
+    makeCard('bss', '📍',  'BSS — Location Breakdown',                 bssHtml,  null) +
+    makeCard('cen', '📍',  'CEN — Location Breakdown',                 cenHtml,  null) +
+    makeCard('hist','🕘',  'Run History',                              histHtml, null);
+
+  /* Apply layout */
+  applyLayoutToCanvas();
+}
+
+function applyLayoutToCanvas() {
+  const c = document.getElementById('canvas');
+  c.className = '';
+  document.querySelectorAll('.card').forEach(card => {
+    card.classList.remove('free', 'dragging');
+    card.style.cssText = '';
+  });
+  if (layout === 'free') {
+    c.classList.add('mode-free');
+    layFreeCards();
+  } else {
+    c.style.display = 'grid';
+    if (layout === 'grid2') c.classList.add('mode-2col');
+    if (layout === 'grid1') c.classList.add('mode-1col');
+  }
+
+  // Restore active button
+  ['3col','2col','1col','free'].forEach(id => {
+    document.getElementById('btn-'+id)?.classList.remove('active');
+  });
+  const activeId = layout.replace('grid3','3col').replace('grid2','2col').replace('grid1','1col');
+  document.getElementById('btn-'+activeId)?.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════
+   FETCH + COUNTDOWN
+═══════════════════════════════════════════ */
+function doRefresh() {
+  const btn = document.getElementById('btn-refresh');
+  btn.innerHTML = '<span class="spin">⟳</span> Refreshing…';
+  btn.disabled = true;
+  fetchData(() => {
+    btn.innerHTML = '🔄 Refresh';
+    btn.disabled = false;
+  });
+  resetCountdown();
+}
+
+function resetCountdown() {
+  clearInterval(countdownTimer);
+  countdownVal = 30;
+  countdownTimer = setInterval(() => {
+    countdownVal--;
+    document.getElementById('countdown').textContent = countdownVal + 's';
+    if (countdownVal <= 0) {
+      fetchData();
+      resetCountdown();
+    }
+  }, 1000);
+}
+
+function fetchData(cb) {
+  fetch('data.json?_=' + Date.now())
+    .then(r => r.json())
+    .then(d => {
+      render(d);
+      if (cb) cb();
+    })
+    .catch(() => {
+      document.getElementById('hdr-last').textContent = '⚠️ data.json not found — waiting for first run…';
+      pill('error');
+      if (cb) cb();
+    });
+}
+
+// Start
+fetchData();
+resetCountdown();
+</script>
+</body>
+</html>
