@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.10"
 
-      - run: python index.py
+      - run: python main.py
 
       - run: |
           git config user.name "github-actions"
